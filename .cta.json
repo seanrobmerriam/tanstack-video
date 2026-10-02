@@ -1,0 +1,26 @@
+{
+  "projectName": "my-tanstack-app",
+  "mode": "file-router",
+  "typescript": true,
+  "packageManager": "bun",
+  "includeExamples": true,
+  "tailwind": true,
+  "projectPreset": "default",
+  "addOnOptions": {},
+  "git": true,
+  "install": true,
+  "intent": true,
+  "routerOnly": false,
+  "version": 1,
+  "framework": "solid",
+  "chosenAddOns": [
+    "biome",
+    "nitro",
+    "better-auth",
+    "form",
+    "solid-ui",
+    "store",
+    "tanstack-query",
+    "tanchat"
+  ]
+}

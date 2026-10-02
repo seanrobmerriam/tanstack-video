@@ -12,7 +12,7 @@ _These are recommendations to keep the migration orderly, not requirements. Skip
 | # | Feature | Phase | Status |
 |---|---------|-------|--------|
 | 1 | Project scaffold & tooling | Foundation | existing |
-| 2 | Data layer | Foundation | planned |
+| 2 | Data layer | Foundation | in-progress |
 | 3 | Storage abstraction | Foundation | planned |
 | 4 | Media processing boundary | Foundation | planned |
 | 5 | Admin auth & sessions | Foundation | planned |
@@ -30,10 +30,18 @@ _These are recommendations to keep the migration orderly, not requirements. Skip
 TanStack Start + Solid, Biome, Nitro, no demo pages. Scaffolded and building clean.
 code in `./` (PR #1)
 
-### 2. Data layer · needs a decision
+### 2. Data layer · in-progress
 Port the `videos` and `admin_sessions` schema and the repository pattern (`SqliteVideoRepository`, `SessionRepository`) from `videostreamgo`'s `node:sqlite` + hand rolled migrations onto this stack's runtime (Nitro's `bun` preset). Routes and services must never touch SQL directly.
-**Done when:** the schema from `db/migrations/001_initial.ts` is ported, migrations run at startup and are tracked in `schema_migrations`, and both repositories pass the same behavior as the source app's tests.
-- [ ] Design it (spec): `/architect data layer`
+**Done when:** the schema from `db/migrations/001_initial.ts` is ported (status enum widened to the full six value lifecycle), migrations run at startup and are tracked in `schema_migrations`, and both repositories pass the same behavior as the source app's tests.
+- [x] Design it (spec): `/architect data layer`
+- [ ] Build it: `/develop data layer`
+   - [ ] Migration module (ordered list shape) + database client (pragmas, directory creation), satisfies AC-1, AC-7, AC-9
+   - [ ] Migration runner (race safe, transactional) + `NotFoundError`/constraint error handling, satisfies AC-1, AC-2, AC-8, AC-10
+   - [ ] `SqliteVideoRepository`, exact search/pagination/ordering/patch semantics, derived `published_at`, satisfies AC-3, AC-4, AC-6, AC-9, AC-10
+   - [ ] `SessionRepository` + server only singleton wiring (globalThis cache, repositories only exported) + Bun runtime/build config, satisfies AC-5, AC-10, AC-1, AC-2, AC-4
+   - [ ] Exercise the critical test scenarios against a real SQLite file, satisfies AC-1 through AC-10
+- [ ] Verify it: `/check verify data layer`
+spec [0001](../specs/0001-data-layer.md)
 
 ### 3. Storage abstraction · needs a decision
 Port the `VideoStorage` interface and `LocalVideoStorage`: writes under a configurable root, portable storage keys (`videos/<uuid>/source.mp4`) persisted in SQLite instead of paths. Decide how reads (currently `resolveLocalPath` called directly by the playback and thumbnail routes) stay behind the boundary on this stack.

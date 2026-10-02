@@ -34,14 +34,15 @@ code in `./` (PR #1)
 Port the `videos` and `admin_sessions` schema and the repository pattern (`SqliteVideoRepository`, `SessionRepository`) from `videostreamgo`'s `node:sqlite` + hand rolled migrations onto this stack's runtime (Nitro's `bun` preset). Routes and services must never touch SQL directly.
 **Done when:** the schema from `db/migrations/001_initial.ts` is ported (status enum widened to the full six value lifecycle), migrations run at startup and are tracked in `schema_migrations`, and both repositories pass the same behavior as the source app's tests.
 - [x] Design it (spec): `/architect data layer`
-- [ ] Build it: `/develop data layer`
-   - [ ] Migration module (ordered list shape) + database client (pragmas, directory creation), satisfies AC-1, AC-7, AC-9
-   - [ ] Migration runner (race safe, transactional) + `NotFoundError`/constraint error handling, satisfies AC-1, AC-2, AC-8, AC-10
-   - [ ] `SqliteVideoRepository`, exact search/pagination/ordering/patch semantics, derived `published_at`, satisfies AC-3, AC-4, AC-6, AC-9, AC-10
-   - [ ] `SessionRepository` + server only singleton wiring (globalThis cache, repositories only exported) + Bun runtime/build config, satisfies AC-5, AC-10, AC-1, AC-2, AC-4
-   - [ ] Exercise the critical test scenarios against a real SQLite file, satisfies AC-1 through AC-10
+- [x] Build it: `/develop data layer`
+   - [x] Migration module (ordered list shape) + database client (pragmas, directory creation), satisfies AC-1, AC-7, AC-9
+   - [x] Migration runner (race safe, transactional) + `NotFoundError`/constraint error handling, satisfies AC-1, AC-2, AC-8, AC-10
+   - [x] `SqliteVideoRepository`, exact search/pagination/ordering/patch semantics, derived `published_at`, satisfies AC-3, AC-4, AC-6, AC-9, AC-10
+   - [x] `SessionRepository` + server only singleton wiring (globalThis cache, repositories only exported) + Bun runtime/build config, satisfies AC-5, AC-10, AC-1, AC-2, AC-4
+   - [x] Exercise the critical test scenarios against a real SQLite file, satisfies AC-1 through AC-10
 - [ ] Verify it: `/check verify data layer`
 spec [0001](../specs/0001-data-layer.md)
+code in `src/server/db`, `src/server/repositories`
 
 ### 3. Storage abstraction · needs a decision
 Port the `VideoStorage` interface and `LocalVideoStorage`: writes under a configurable root, portable storage keys (`videos/<uuid>/source.mp4`) persisted in SQLite instead of paths. Decide how reads (currently `resolveLocalPath` called directly by the playback and thumbnail routes) stay behind the boundary on this stack.

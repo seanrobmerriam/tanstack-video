@@ -1,7 +1,7 @@
 # 0001. Adopt bun:sqlite with hand rolled migrations for the data layer
 
 **Date**: 2026-10-02
-**Status**: Proposed
+**Status**: In Progress
 
 ## Summary
 
